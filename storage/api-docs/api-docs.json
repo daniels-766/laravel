@@ -1,0 +1,372 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Keuangan Jimbodat",
+        "description": "Dokumentasi API Keuangan",
+        "contact": {
+            "email": "admin@jimbodat.my.id"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register user",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 6
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Token returned after registration"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token returned after login"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Logout success"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/transaksi": {
+            "get": {
+                "tags": [
+                    "Transaksi"
+                ],
+                "summary": "List transaksi",
+                "operationId": "265aa12b01c5b9303a53026caa95a732",
+                "parameters": [
+                    {
+                        "name": "bulan",
+                        "in": "query",
+                        "description": "Format YYYY-MM",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "jenis",
+                        "in": "query",
+                        "description": "pemasukan atau pengeluaran",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "jumlah",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List data transaksi"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transaksi"
+                ],
+                "summary": "Tambah transaksi",
+                "operationId": "2cb84abfbd466aa89e2d1ed84dca88c3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "jenis",
+                                    "keterangan",
+                                    "jumlah"
+                                ],
+                                "properties": {
+                                    "jenis": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pemasukan",
+                                            "pengeluaran"
+                                        ]
+                                    },
+                                    "keterangan": {
+                                        "type": "string"
+                                    },
+                                    "jumlah": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transaksi berhasil ditambahkan"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/sisa-uang": {
+            "get": {
+                "tags": [
+                    "Transaksi"
+                ],
+                "summary": "Dapatkan sisa uang",
+                "operationId": "363fbced53dd3d95f93a657e8381ed55",
+                "responses": {
+                    "200": {
+                        "description": "Data sisa uang"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/transaksi/{id}": {
+            "put": {
+                "tags": [
+                    "Transaksi"
+                ],
+                "summary": "Update transaksi",
+                "operationId": "2a9a1bc9a834ef439778ab26233dfa3d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "jenis",
+                                    "keterangan",
+                                    "jumlah"
+                                ],
+                                "properties": {
+                                    "jenis": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pemasukan",
+                                            "pengeluaran"
+                                        ]
+                                    },
+                                    "keterangan": {
+                                        "type": "string"
+                                    },
+                                    "jumlah": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transaksi berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transaksi"
+                ],
+                "summary": "Hapus transaksi",
+                "operationId": "159f36d7976c1f2238bd09f6f54d3836",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaksi berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Transaksi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/ringkasan-bulanan": {
+            "get": {
+                "tags": [
+                    "Transaksi"
+                ],
+                "summary": "Ringkasan transaksi per bulan",
+                "operationId": "1e5b074ddc7cf3c44a620c0d01ee0df3",
+                "responses": {
+                    "200": {
+                        "description": "Ringkasan bulanan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Transaksi",
+            "description": "Transaksi"
+        }
+    ]
+}
